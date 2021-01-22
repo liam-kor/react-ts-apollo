@@ -1,11 +1,15 @@
-import { gql, useMutation } from "@apollo/client";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
+import {
+  LoginMutation,
+  LoginMutationVariables,
+} from "../__generated__/LoginMutation";
 
 const LOGIN_MUTATION = gql`
-  mutation LoginMutation($phoneNumber: String!, $password: String!) {
-    login(input: { phoneNumber: $phoneNumber, password: $password }) {
+  mutation LoginMutation($loginInput: LoginInput!) {
+    login(input: $loginInput) {
       ok
       token
       error
@@ -20,18 +24,35 @@ interface ILoginForm {
 
 export const Login = () => {
   const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
-  const [loginMutation, { loading, error, data }] = useMutation(LOGIN_MUTATION);
-  const onSubmit = () => {
-    const { phoneNumber, password } = getValues();
-    loginMutation({
-      variables: {
-        phoneNumber,
-        password,
-      },
-    });
+  const onCompleted = (data: LoginMutation) => {
+    const {
+      login: { error, ok, token },
+    } = data;
+    if (ok) {
+      console.log(token);
+    }
   };
-  console.log(errors);
-  console.log(data);
+
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN_MUTATION, {
+    onCompleted,
+  });
+
+  const onSubmit = () => {
+    if (!loading) {
+      const { phoneNumber, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            phoneNumber,
+            password,
+          },
+        },
+      });
+    }
+  };
   return (
     <div className="h-screen flex items-center justify-center bg-gray-800">
       <div className="bg-white w-full max-w-lg py-5 rounded-lg text-center">
@@ -62,7 +83,12 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 5 chars" />
           )}
-          <button className="btn px-3 py-5 ">Log In</button>
+          <button className="btn px-3 py-5 ">
+            {loading ? "Loading..." : "Log In"}
+          </button>
+          {loginMutationResult?.login.error && (
+            <FormError errorMessage={loginMutationResult.login.error} />
+          )}
         </form>
       </div>
     </div>

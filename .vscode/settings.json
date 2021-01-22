@@ -16,6 +16,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "css.validate": false,
   "jest.enableInlineErrorMessages": true,
   "jest.showCoverageOnLoad": true,
   "jest.runAllTestsFirst": false
