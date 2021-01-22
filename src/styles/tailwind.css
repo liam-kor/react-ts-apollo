@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
+
+.input {
+  @apply bg-gray-100 shadow-inner focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 focus:outline-none rounded-md
+}
+
+.btn {
+  @apply  bg-gray-800 text-white text-lg mt-3 rounded-md focus:outline-none hover:opacity-90
+}
+
 @tailwind utilities;
