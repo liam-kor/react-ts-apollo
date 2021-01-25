@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Button } from "../components/button";
@@ -65,6 +66,9 @@ export const Login = () => {
   };
   return (
     <div className="h-screen flex items-center justify-center bg-gray-800">
+      <Helmet>
+        <title>Admin | Login</title>
+      </Helmet>
       <div className="bg-white w-full max-w-screen-sm py-5 rounded-lg text-center item-center">
         <h3 className=" text-3xl text-gray-800">Log In</h3>
         <form
